@@ -22,35 +22,45 @@ import java.io.*;
 
 public class Board extends JPanel implements Runnable, MouseListener
 {
+  // board configuration
   boolean ingame = true;
+
   private Dimension d;
-  int BOARD_WIDTH=500;
-  int BOARD_HEIGHT=500;
+
+  int BOARD_WIDTH=500; // board width
+  int BOARD_HEIGHT=500; // board height
+
   int x = 0;
+
   BufferedImage img;
-  String message = "Click Board to Start";
+
+  String message = "Click Board to Start"; // as of now, this doesn't disappear when clicked
+
   private Thread animator;
 
   // entities
-  Player p;
-  Alien[] aliens = new Alien[10];
+  Player agentOne;
+  Alien[] aliens = new Alien[10]; // arraylist of Alien class -> aliens
  
   public Board()
   {
+    // board configuration (size, bg color)
     addKeyListener(new TAdapter());
     addMouseListener(this);
     setFocusable(true);
     d = new Dimension(BOARD_WIDTH, BOARD_HEIGHT);
+    setBackground(Color.black);
 
-    // entity generation
-    p = new Player(BOARD_WIDTH/2, BOARD_HEIGHT-60, 5);
+    // entity generation 
+    // agent one is an entity of the Player class
+    agentOne = new Player(BOARD_WIDTH/2, BOARD_HEIGHT-60, 5);
 
+    // alien generation
     int alienX = 10; // appears towards the top
     int alienY = 10; // appears towards the left
-
     for(int i = 0; i < aliens.length; i++)
     {
-      aliens[i] = new Alien(alienX, alienY, 2);
+      aliens[i] = new Alien(alienX, alienY, 2); // aliens have a speed of 2
       alienX += 40;
 
       if (i == 4) // splits in two rows
@@ -59,8 +69,6 @@ public class Board extends JPanel implements Runnable, MouseListener
         alienY += 40;
       }
     }
-
-    setBackground(Color.black);
 
     if (animator == null || !ingame) 
     {
@@ -80,17 +88,17 @@ public class Board extends JPanel implements Runnable, MouseListener
 
     // player
     g.setColor(Color.red);
-    g.fillRect(p.x, p.y, 20, 20);
+    g.fillRect(agentOne.x, agentOne.y, 20, 20);
 
     // player movement
-    if(p.moveRight == true) 
+    if(agentOne.moveRight == true) // moves right
     {
-      p.x += p.speed;
+      agentOne.x += agentOne.speed;
     }
     
-    if (p.moveLeft == true)
+    if (agentOne.moveLeft == true) // moves left
     { 
-      p.x -= p.speed;
+      agentOne.x -= agentOne.speed;
     }    
 
     // alien
@@ -102,7 +110,7 @@ public class Board extends JPanel implements Runnable, MouseListener
     // alien movement
     moveAliens();
 
-    // text
+    // text -> the message "click the board to play"
     Font small = new Font("Helvetica", Font.BOLD, 14);
     FontMetrics metr = this.getFontMetrics(small);
     g.setColor(Color.black);
@@ -120,20 +128,20 @@ public class Board extends JPanel implements Runnable, MouseListener
 
   public void moveAliens() 
   {
-    for(int i = 0; i < aliens.length; i++)
+    for(int i = 0; i < aliens.length; i++) // side to side movement
     {
-      if(aliens[i].moveLeft == true)
+      if(aliens[i].moveLeft == true) // move left
       {
         aliens[i].x -= aliens[i].speed;
       }
 
-      if(aliens[i].moveRight == true)
+      if(aliens[i].moveRight == true) // move right
       {
         aliens[i].x += aliens[i].speed;
       }
     }
 
-    for(int i = 0; i < aliens.length; i++)
+    for(int i = 0; i < aliens.length; i++) // establishing boundaries
     {
       if(aliens[i].x > BOARD_WIDTH) // if they go over the right screen boundary...
       {
@@ -164,8 +172,8 @@ public class Board extends JPanel implements Runnable, MouseListener
     public void keyReleased(KeyEvent e) 
     {
       int key = e.getKeyCode();
-      p.moveRight = false;
-      p.moveLeft = false;
+      agentOne.moveRight = false;
+      agentOne.moveLeft = false;
     }
     
     public void keyPressed(KeyEvent e) 
@@ -177,11 +185,11 @@ public class Board extends JPanel implements Runnable, MouseListener
 
       if(key==39) // right arrow
       {
-        p.moveRight = true; // moves right
+        agentOne.moveRight = true; // moves right
       }
       if(key==37) // left arrow
       {
-        p.moveLeft = true; // moves left
+        agentOne.moveLeft = true; // moves left
       }
     }
   }
