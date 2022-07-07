@@ -20,140 +20,220 @@ import java.awt.image.*;
 import java.io.*;
 
 
-public class Board  extends JPanel implements Runnable, MouseListener
+public class Board extends JPanel implements Runnable, MouseListener
 {
-boolean ingame = true;
-private Dimension d;
-int BOARD_WIDTH=500;
-int BOARD_HEIGHT=500;
-int x = 0;
-BufferedImage img;
-String message = "Click Board to Start";
- private Thread animator;
+  boolean ingame = true;
+  private Dimension d;
+  int BOARD_WIDTH=500;
+  int BOARD_HEIGHT=500;
+  int x = 0;
+  BufferedImage img;
+  String message = "Click Board to Start";
+  private Thread animator;
 
+  // entities
+  Player p;
+  Alien[] aliens = new Alien[10];
  
-    public Board()
+  public Board()
+  {
+    addKeyListener(new TAdapter());
+    addMouseListener(this);
+    setFocusable(true);
+    d = new Dimension(BOARD_WIDTH, BOARD_HEIGHT);
+
+    // entity generation
+    p = new Player(BOARD_WIDTH/2, BOARD_HEIGHT-60, 5);
+
+    int alienX = 10; // appears towards the top
+    int alienY = 10; // appears towards the left
+
+    for(int i = 0; i < aliens.length; i++)
     {
-          addKeyListener(new TAdapter());
-         addMouseListener(this);
-        setFocusable(true);
-        d = new Dimension(BOARD_WIDTH, BOARD_HEIGHT);
-        setBackground(Color.black);
-       
-           /*         
-             try {
-                img = ImageIO.read(this.getClass().getResource("mount.jpg"));
-            } catch (IOException e) {
-                 System.out.println("Image could not be read");
-            // System.exit(1);
-            }
-            */
-            if (animator == null || !ingame) {
-            animator = new Thread(this);
-            animator.start();
-            }
+      aliens[i] = new Alien(alienX, alienY, 2);
+      alienX += 40;
+
+      if (i == 4) // splits in two rows
+      {
+        alienX = 10;
+        alienY += 40;
+      }
+    }
+
+    setBackground(Color.black);
+
+    if (animator == null || !ingame) 
+    {
+      animator = new Thread(this);
+      animator.start();
+    }
                     
-  
-        setDoubleBuffered(true);
+    setDoubleBuffered(true);
+  }
+    
+  public void paint(Graphics g)
+  {
+    super.paint(g);
+    
+    g.setColor(Color.white);
+    g.fillRect(0, 0, d.width, d.height);
+
+    // player
+    g.setColor(Color.red);
+    g.fillRect(p.x, p.y, 20, 20);
+
+    // player movement
+    if(p.moveRight == true) 
+    {
+      p.x += p.speed;
     }
     
-    public void paint(Graphics g)
-{
-super.paint(g);
+    if (p.moveLeft == true)
+    { 
+      p.x -= p.speed;
+    }    
 
-g.setColor(Color.white);
-g.fillRect(0, 0, d.width, d.height);
-//g.fillOval(x,y,r,r);
-
-        Font small = new Font("Helvetica", Font.BOLD, 14);
-        FontMetrics metr = this.getFontMetrics(small);
-        g.setColor(Color.black);
-       g.setFont(small);
-        g.drawString(message, 10, d.height-60);
-
-    if (ingame) {
-        
-    
-        
-       
-        
-    // g.drawImage(img,0,0,200,200 ,null);
-     
-    
-   
+    // alien
+    for(int i = 0; i < aliens.length; i++)
+    {
+      g.fillRect(aliens[i].x, aliens[i].y, 30, 30);
     }
-Toolkit.getDefaultToolkit().sync();
-g.dispose();
-}
-private class TAdapter extends KeyAdapter {
 
-public void keyReleased(KeyEvent e) {
-     int key = e.getKeyCode();
-     
-}
+    // alien movement
+    moveAliens();
 
-public void keyPressed(KeyEvent e) {
-//System.out.println( e.getKeyCode());
-   // message = "Key Pressed: " + e.getKeyCode();
-    int key = e.getKeyCode();
-        if(key==39){
-          
+    // text
+    Font small = new Font("Helvetica", Font.BOLD, 14);
+    FontMetrics metr = this.getFontMetrics(small);
+    g.setColor(Color.black);
+    g.setFont(small);
+    g.drawString(message, 10, d.height-60);
+    
+    if (ingame) 
+    {
+
+    }
+    
+    Toolkit.getDefaultToolkit().sync();
+    g.dispose();
+  }
+
+  public void moveAliens() 
+  {
+    for(int i = 0; i < aliens.length; i++)
+    {
+      if(aliens[i].moveLeft == true)
+      {
+        aliens[i].x -= aliens[i].speed;
+      }
+
+      if(aliens[i].moveRight == true)
+      {
+        aliens[i].x += aliens[i].speed;
+      }
+    }
+
+    for(int i = 0; i < aliens.length; i++)
+    {
+      if(aliens[i].x > BOARD_WIDTH) // if they go over the right screen boundary...
+      {
+        for(int z = 0; z < aliens.length; z++)
+        {
+          aliens[z].moveLeft = true; // the aliens move back left
+          aliens[z].moveRight = false;
+
+          aliens[z].y += 5; // and move down when it hits the border
         }
-        
-       
+      }
 
-}
+      if(aliens[i].x < 0) // if they go over the left screen boundary...
+      {
+        for(int z = 0; z < aliens.length; z++)
+        {
+          aliens[z].moveRight = true; // the aliens move back right
+          aliens[z].moveLeft = false;
 
-}
+          aliens[z].y += 5; // and move down when it hits the border
+        }
+      }
+    }
+  }
 
-
-
-
-public void mousePressed(MouseEvent e) {
-    int x = e.getX();
-     int y = e.getY();
-
-}
-
-public void mouseReleased(MouseEvent e) {
-
-}
-
-public void mouseEntered(MouseEvent e) {
-
-}
-
-public void mouseExited(MouseEvent e) {
-
-}
-
-public void mouseClicked(MouseEvent e) {
-
-}
-
-public void run() {
-
-long beforeTime, timeDiff, sleep;
-
-beforeTime = System.currentTimeMillis();
- int animationDelay = 500;
- long time = 
-            System.currentTimeMillis();
-    while (true) {//infinite loop
-     // spriteManager.update();
-      repaint();
-      try {
-        time += animationDelay;
-        Thread.sleep(Math.max(0,time - 
-          System.currentTimeMillis()));
-      }catch (InterruptedException e) {
-        System.out.println(e);
-      }//end catch
-    }//end while loop
-
+  private class TAdapter extends KeyAdapter 
+  {
+    public void keyReleased(KeyEvent e) 
+    {
+      int key = e.getKeyCode();
+      p.moveRight = false;
+      p.moveLeft = false;
+    }
     
+    public void keyPressed(KeyEvent e) 
+    {
+      // System.out.println( e.getKeyCode());
+      // message = "Key Pressed: " + e.getKeyCode();
 
+      int key = e.getKeyCode();
 
-}//end of run
+      if(key==39) // right arrow
+      {
+        p.moveRight = true; // moves right
+      }
+      if(key==37) // left arrow
+      {
+        p.moveLeft = true; // moves left
+      }
+    }
+  }
 
-}//end of class
+  public void mousePressed(MouseEvent e) 
+  {
+    int x = e.getX();
+    int y = e.getY();
+  }
+
+  public void mouseReleased(MouseEvent e) 
+  {
+
+  }
+
+  public void mouseEntered(MouseEvent e) 
+  {
+
+  }
+
+  public void mouseExited(MouseEvent e) 
+  {
+
+  }
+  
+  public void mouseClicked(MouseEvent e) 
+  {
+
+  }
+  
+  public void run() 
+  {
+    long beforeTime, timeDiff, sleep;
+    
+    beforeTime = System.currentTimeMillis();
+    int animationDelay = 10;
+    long time = System.currentTimeMillis();
+    
+    while (true) 
+    {
+      // infinite loop
+      // spriteManager.update();
+      repaint();
+      try 
+      {
+        time += animationDelay;
+        Thread.sleep(Math.max(0,time - System.currentTimeMillis()));
+      }
+      catch (InterruptedException e) 
+      {
+        System.out.println(e);
+      } // catch
+    } // while loop
+  } // run
+} // class

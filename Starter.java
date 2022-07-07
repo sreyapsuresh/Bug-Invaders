@@ -5,7 +5,7 @@ public class Starter extends JFrame {
     public Starter()
     {
         add(new Board());
-        setTitle("Board");
+        setTitle("Space Invaders");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500,500);
         setLocationRelativeTo(null);
