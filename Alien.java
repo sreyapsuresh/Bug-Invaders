@@ -13,3 +13,20 @@ public class Alien extends Character
         isVisible = true;
     }
 }
+
+public void mover(){
+
+}
+public void move(int direction){
+    if(moveLeft==true)
+        setX(getX()-getSpeed());
+
+    if(moveRight==true)
+        setX(getX()+getSpeed());
+}
+
+public void draw(Graphics window){
+    window.drawImage(getImage(), getX(), getY(), getWidth(), getHeight(), null)
+}
+
+

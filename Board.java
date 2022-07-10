@@ -220,6 +220,23 @@ public class Board extends JPanel implements Runnable, MouseListener
 
   }
   
+//if you press space bar shot goes up
+
+public void keyPressed ( KeyEvemt e){
+  int k = e.getKeyCode();
+  s.setLeftRight(k);
+  if(k==32) {
+    sh.goUp=true;
+    sh.setX(s.getX()+ (s.getWidth()/2));
+    sh.setY(s.getY());
+  }
+}
+
+public void keyRelease ( KeyEvent e){
+  int k = e.getKeyCode();
+  s.stop();
+}
+
   public void run() 
   {
     long beforeTime, timeDiff, sleep;
@@ -245,3 +262,4 @@ public class Board extends JPanel implements Runnable, MouseListener
     } // while loop
   } // run
 } // class
+
