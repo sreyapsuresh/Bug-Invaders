@@ -25,7 +25,7 @@ public class RunGraphics {
     // The method to set up
     public RunGraphics() {
 
-        frame = new JFrame("Cool Game");
+        frame = new JFrame("Bug Invaders");
         frame.setSize(fW, fH);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // the event that triggers the end of the program
         frame.setPreferredSize(frame.getSize());
@@ -81,8 +81,6 @@ public class RunGraphics {
 
         }
 
-        @Override
-
         public void paintComponent(Graphics g) {
 
             Graphics2D g2 = (Graphics2D) g;// g2 is the graphics object that we need to use
@@ -91,7 +89,7 @@ public class RunGraphics {
             Dimension d = getSize();
 
             // create a background
-            g2.setColor(Color.white);
+            g2.setColor(Color.black);
             g2.fillRect(0, 0, d.width, d.height);
 
             moveAlien();
@@ -108,6 +106,8 @@ public class RunGraphics {
                         a[r][c].draw(g2);
                 }
             }
+
+            
 
         } // end of paintcomponent
 
@@ -215,7 +215,7 @@ public class RunGraphics {
         public void run() {
             long beforeTime, timeDiff, sleep;
             beforeTime = System.currentTimeMillis();
-            int animationDelay = 37;
+            int animationDelay = 50;
             long time = System.currentTimeMillis();
             while (true) {// infinite loop
                 // spriteManager.update();
