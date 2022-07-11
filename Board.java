@@ -224,6 +224,9 @@ public class Board extends JPanel implements Runnable, MouseListener
 
 public void keyPressed ( KeyEvemt e){
   int k = e.getKeyCode();
+
+  //NEW 
+  if 
   s.setLeftRight(k);
   if(k==32) {
     sh.goUp=true;
@@ -236,6 +239,37 @@ public void keyRelease ( KeyEvent e){
   int k = e.getKeyCode();
   s.stop();
 }
+
+public void reset(){
+  xAxis = 30;
+  yAxis = 30;
+
+  a = new Alien [3][10];
+
+  gameOn = false;
+  s = new Ship(200,500, 57, 35, 5, "player.png" );
+  sh = new Shot(200,500,5,20,15,"shot.png");
+  int x = 10;
+  int y = 10;
+  for(int r = 0; r<a.length; r++){
+    for (int c = 0; c<a[0].length; c++){
+      a[r][c] = new Alien(x,y,30,20,5,"alien.png");
+      x += 35;
+    }
+  }
+}
+
+if(gameOn==true){
+
+  moveAlien();
+  s.move(0);
+  sh.move(0);
+}else{
+  g2.setColor(Color.black);
+  g.drawString("Press S to Start", 10,200);
+}
+
+
 
   public void run() 
   {
