@@ -1,5 +1,6 @@
 import java.awt.*;  
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
@@ -17,6 +18,13 @@ import java.util.*;
 import javax.swing.Timer;
 import java.awt.event.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
+import javax.sound.sampled.*;
+
 public class RunGraphics {
 
     private JFrame frame;
@@ -33,16 +41,18 @@ public class RunGraphics {
         frame.add(new showGraphics(frame.getSize())); // Setting up the DrawBars public class function (getting bars and
         // putting it in this frame)
         frame.pack();
-        frame.setVisible(true);
-
+        frame.setVisible(true); 
     }
 
     // The main method
-    public static void main(String... argv) {
+    public static void main(String[] args) 
+    {
         new RunGraphics();
 
-    }
+        // music player
+        MusicPlayer.RunMusic("bugDestroyers.wav");
 
+    }
     public static class showGraphics extends JPanel implements Runnable, MouseListener, KeyListener {
 
         private Thread animator;
@@ -95,7 +105,7 @@ public class RunGraphics {
                 }
                 x=10;
                 y += 25;
-            }
+            }      
         }
 
         public void paintComponent(Graphics g) {
