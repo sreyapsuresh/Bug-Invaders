@@ -1,3 +1,4 @@
+import java.awt.*;  
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
@@ -53,6 +54,7 @@ public class RunGraphics {
         Shot sh;
         Boolean gameOn = false;
         int points;
+        String emotion = "Neutral";
 
         public showGraphics(Dimension dimension) {
             
@@ -85,7 +87,7 @@ public class RunGraphics {
             s = new Ship(200,500,57,35,5,"player.png");
             sh = new Shot(200,500,5,20,15,"shot.png");
             int x = 10;
-            int y = 10;
+            int y = 70;
             for(int r = 0; r<a.length; r++){
                 for (int c = 0; c<a[0].length; c++){
                     a[r][c] = new Alien(x,y,30,20,5,"alien.png");
@@ -115,6 +117,8 @@ public class RunGraphics {
                 s.move(0);
                 sh.move(0);
 
+                oneSprite(g);
+
                 updateScore(g, g3);
             } else
             {
@@ -130,20 +134,25 @@ public class RunGraphics {
                     if(a[r][c].isVis)
                         a[r][c].draw(g2);
                 }
-            }
-
+            }  
             
 
         } // end of paintcomponent
 
-        private void startScreen(Graphics g, Graphics2D g2) {
+        public void oneSprite(Graphics g) {
+            Toolkit t=Toolkit.getDefaultToolkit();  
+            Image i = t.getImage("one"+ emotion + ".png");  
+            g.drawImage(i, 0, 0,this);
+        }
+
+        public void startScreen(Graphics g, Graphics2D g2) {
             g2.setColor(Color.white);
             g.drawString("Press S to start", 10, 200);
         }
 
         public void updateScore(Graphics g, Graphics2D g3) {
             g3.setColor(Color.white);
-            g.drawString("Score: " + points, 10, 200);
+            g.drawString("Score: " + points, 500, 25);
         }
 
         public void hitDetect(){
@@ -161,6 +170,7 @@ public class RunGraphics {
                             sh.x = -30;
 
                             points++;
+                            emotion = "Smile"; 
                             updateScore(null, null);
                     }
                     //}
