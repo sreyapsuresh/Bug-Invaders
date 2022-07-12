@@ -46,25 +46,17 @@ public class RunGraphics {
 
         private Thread animator;
 
-        int xAxis = 30;
-        int yAxis = 30;
+        int xAxis;
+        int yAxis;
         Ship s;
         Alien[][] a = new Alien[3][10];
         Shot sh;
+        Boolean gameOn = false;
+        int points;
 
         public showGraphics(Dimension dimension) {
-            s = new Ship(200,500,57,35,5,"player.png");
-            sh = new Shot(200,500,5,20,15,"shot.png");
-            int x = 10;
-            int y = 10;
-            for(int r = 0; r<a.length; r++){
-                for (int c = 0; c<a[0].length; c++){
-                    a[r][c] = new Alien(x,y,30,20,5,"alien.png");
-                    x += 35;
-                }
-                x=10;
-                y += 25;
-            }
+            
+            gameSetup();
 
             setSize(dimension);
             setPreferredSize(dimension);
@@ -81,9 +73,34 @@ public class RunGraphics {
 
         }
 
+        public void gameSetup() // sets up the game
+        {
+            yAxis = 30;
+            xAxis = 30;
+            points = 0;
+
+            a = new Alien[3][10];
+
+            gameOn = false;
+            s = new Ship(200,500,57,35,5,"player.png");
+            sh = new Shot(200,500,5,20,15,"shot.png");
+            int x = 10;
+            int y = 10;
+            for(int r = 0; r<a.length; r++){
+                for (int c = 0; c<a[0].length; c++){
+                    a[r][c] = new Alien(x,y,30,20,5,"alien.png");
+                    x += 35;
+                }
+                x=10;
+                y += 25;
+            }
+        }
+
         public void paintComponent(Graphics g) {
 
             Graphics2D g2 = (Graphics2D) g;// g2 is the graphics object that we need to use
+            Graphics2D g3 = (Graphics2D) g;
+            // Graphics2D g4 = (Graphics2D) g;
 
             // to draw things to the screen
             Dimension d = getSize();
@@ -92,9 +109,17 @@ public class RunGraphics {
             g2.setColor(Color.black);
             g2.fillRect(0, 0, d.width, d.height);
 
-            moveAlien();
-            s.move(0);
-            sh.move(0);
+            if (gameOn == true)
+            {
+                moveAlien();
+                s.move(0);
+                sh.move(0);
+
+                updateScore(g, g3);
+            } else
+            {
+                startScreen(g, g2);
+            }
 
             sh.draw(g2);
             s.draw(g2);
@@ -111,6 +136,16 @@ public class RunGraphics {
 
         } // end of paintcomponent
 
+        private void startScreen(Graphics g, Graphics2D g2) {
+            g2.setColor(Color.white);
+            g.drawString("Press S to start", 10, 200);
+        }
+
+        public void updateScore(Graphics g, Graphics2D g3) {
+            g3.setColor(Color.white);
+            g.drawString("Score: " + points, 10, 200);
+        }
+
         public void hitDetect(){
 
             for(int r = 0; r<a.length; r++){
@@ -124,6 +159,9 @@ public class RunGraphics {
 
                             a[r][c].isVis=false; 
                             sh.x = -30;
+
+                            points++;
+                            updateScore(null, null);
                     }
                     //}
 
@@ -171,6 +209,11 @@ public class RunGraphics {
 
                     a[r][c].setY(a[r][c].getY()+10);
 
+                    if(a[r][c].getY() > 500) // ship position
+                    {
+                        gameOn = false;
+                    }
+
                 }}
         }
 
@@ -199,6 +242,13 @@ public class RunGraphics {
         public void keyPressed ( KeyEvent e){  
             // System.out.println("Key: " + e.getKeyCode());
             int k = e.getKeyCode();
+
+            if(k==83)
+            {
+                gameSetup();
+                gameOn = true;
+            }
+
             s.setLeftRight(k);
             if(k==32)  {
                 sh.goUp=true;
