@@ -32,12 +32,12 @@ public class Ship extends SpaceCharacter
 
     }
 
-    public void setLeftRight(int d){
-        if(d==37){
+    public void setLeftRight(int d, int l, int r){
+        if(d==l){
             moveLeft = true;
         }
 
-        if(d==39){
+        if(d==r){
             moveRight = true;
         }
 

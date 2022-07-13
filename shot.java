@@ -39,20 +39,18 @@ public class Shot extends SpaceCharacter
 
 
     public void setLeftRight(int d){
-        if(d==37){
+        if(d==37 || d==65){
             moveLeft = true;
         }
 
-        if(d==39){
+        if(d==39 || d==68){
             moveRight = true;
         }
-
     }
 
     public void stop(){
         moveLeft=false;
         moveRight=false;
-
     }
 
 }

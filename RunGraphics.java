@@ -59,9 +59,15 @@ public class RunGraphics {
 
         int xAxis;
         int yAxis;
+
         Ship s;
+        Ship agentTwo;
+
         Alien[][] a = new Alien[3][10];
+
         Shot sh;
+        Shot twoShot;
+
         Boolean gameOn = false;
         int points;
         String emotion = "Neutral";
@@ -94,10 +100,16 @@ public class RunGraphics {
             a = new Alien[3][10];
 
             gameOn = false;
-            s = new Ship(200,500,57,35,5,"player.png");
-            sh = new Shot(200,500,5,20,15,"shot.png");
+            
+            s = new Ship(100,500,57,35,5,"player.png");
+            agentTwo = new Ship(300,500,57,35,5,"player.png");
+            
+            sh = new Shot(100,500,5,20,15,"shot.png");
+            twoShot = new Shot(300,500,5,20,15,"shot.png");
+
             int x = 10;
             int y = 70;
+
             for(int r = 0; r<a.length; r++){
                 for (int c = 0; c<a[0].length; c++){
                     a[r][c] = new Alien(x,y,30,20,5,"alien.png");
@@ -112,7 +124,7 @@ public class RunGraphics {
 
             Graphics2D g2 = (Graphics2D) g;// g2 is the graphics object that we need to use
             Graphics2D g3 = (Graphics2D) g;
-            // Graphics2D g4 = (Graphics2D) g;
+            Graphics2D g4 = (Graphics2D) g;
 
             // to draw things to the screen
             Dimension d = getSize();
@@ -127,6 +139,9 @@ public class RunGraphics {
                 s.move(0);
                 sh.move(0);
 
+                agentTwo.move(0);
+                twoShot.move(0);
+
                 oneSprite(g);
 
                 updateScore(g, g3);
@@ -137,6 +152,10 @@ public class RunGraphics {
 
             sh.draw(g2);
             s.draw(g2);
+
+            twoShot.draw(g4);
+            agentTwo.draw(g4);
+
             hitDetect();
 
             for(int r = 0; r<a.length; r++){
@@ -178,10 +197,17 @@ public class RunGraphics {
 
                             a[r][c].isVis=false; 
                             sh.x = -30;
-
                             points++;
                             emotion = "Smile"; 
                             updateScore(null, null);
+                    } 
+                    if (a[r][c].isVis == true && twoShot.getX() + twoShot.getWidth() >= a[r][c].getX() && 
+                    twoShot.getX() <= a[r][c].getX() + a[r][c].getWidth() && 
+                    twoShot.getY() + twoShot.getHeight() >= (a[r][c].getY()) && 
+                    twoShot.getY() <= a[r][c].getY() + a[r][c].getHeight()) 
+                    {
+                        a[r][c].isVis=false; 
+                            twoShot.x = -30;
                     }
                     //}
 
@@ -229,7 +255,7 @@ public class RunGraphics {
 
                     a[r][c].setY(a[r][c].getY()+10);
 
-                    if(a[r][c].getY() > 500) // ship position
+                    if(a[r][c].getY() > 500) // ships position
                     {
                         gameOn = false;
                     }
@@ -269,17 +295,27 @@ public class RunGraphics {
                 gameOn = true;
             }
 
-            s.setLeftRight(k);
+            s.setLeftRight(k,37, 39);
+            agentTwo.setLeftRight(k, 65, 68);
+
             if(k==32)  {
                 sh.goUp=true;
                 sh.setX(s.getX() + (s.getWidth()/2));
                 sh.setY(s.getY() );
+            }
+
+            if(k==86)
+            {
+                twoShot.goUp=true;
+                twoShot.setX(agentTwo.getX() + (agentTwo.getWidth()/2));
+                twoShot.setY(agentTwo.getY() );
             }
         }  
 
         public void keyReleased ( KeyEvent e ){  
             int k = e.getKeyCode();
             s.stop();
+            agentTwo.stop();
 
         }  
         public void run() {
