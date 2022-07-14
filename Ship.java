@@ -13,18 +13,22 @@ public class Ship extends SpaceCharacter
         super(x, y, w, h, s, u + ".png");
     }
 
-    public void draw(Graphics window){
+    public void draw(Graphics window)
+    {
         window.drawImage(getImage(),getX(),getY(),getWidth(),getHeight(),null);
     }
 
-    public  void move(int d){
+    public  void move(int d)
+    {
         if(moveLeft)
+        {
             setX(getX()-getSpeed());
-
-        if(moveRight){
-            setX(getX()+getSpeed());
         }
 
+        if(moveRight)
+        {
+            setX(getX()+getSpeed());
+        }
     }
 
     public void setLeftRight(int d, int l, int r){
@@ -38,10 +42,10 @@ public class Ship extends SpaceCharacter
 
     }
 
-    public void stop(){
-        moveLeft=false;
-        moveRight=false;
-
+    public void stop()
+    {
+        moveLeft = false;
+        moveRight = false;
     }
 
 }

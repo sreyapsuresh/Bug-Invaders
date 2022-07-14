@@ -11,7 +11,7 @@ public class Alien extends SpaceCharacter
 
     public Alien(int x, int y, int w, int h, int s, String u)
     {
-        super(x, y, w, h, s, u);
+        super(x, y, w, h, s, u + ".png");
         isVis=true;
         moveRight=true;
     }

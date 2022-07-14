@@ -13,8 +13,8 @@ import java.awt.event.*;
 /*
 *  GAME CONTROLS:
 * 
-*  Player 1 controls Agent Zero, and moves using the A & D keys. Use W to shoot.
-*  Player 2 controls Agent One, and moves using the <- & -> keys. Use Spacebar to shoot.
+*  Player 1 controls Agent Zero, and moves using the <- & -> keys. Use Up to shoot.
+*  Player 2 controls Agent One, and moves using the A & D keys. Use W to shoot.
 * 
 */
 
@@ -53,6 +53,7 @@ public class RunGraphics
         int yAxis;
         Boolean gameOn = false;
         Boolean controls = false;
+        Boolean gameOver = false;
 
         String emotionZero = "Neutral"; // Expression of Agent Zero
         String emotionOne = "Neutral"; // Agent One
@@ -103,8 +104,8 @@ public class RunGraphics
             agentOne = new Ship(300,500,32,32,5,"oneShip");                                                             
             
             // Shots
-            zeroShot = new Shot(100,500,5,20,15,"shot.png");
-            oneShot = new Shot(300,500,5,20,15,"shot.png");                                                          
+            zeroShot = new Shot(100,500,5,20,15,"zeroShot");
+            oneShot = new Shot(300,500,5,20,15,"oneShot");                                                          
 
             // Alien
             a = new Alien[3][10];
@@ -116,7 +117,32 @@ public class RunGraphics
             {
                 for (int c = 0; c<a[0].length; c++)
                 {
-                    a[r][c] = new Alien(x,y,25,25,5,"alien.png");
+                    int num = c%5;
+
+                        switch (num) {
+                            case 0:
+                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienOne");
+                                break;
+
+                            case 1:
+                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienTwo");
+                                break;
+
+                            case 2:
+                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienThree"); 
+                                break;
+
+                            case 3:
+                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienFour");
+                                break;
+
+                            case 4:
+                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienFive");
+                                break;
+                        
+                            default:
+                                break;
+                        }
                     x += 35;
                 }
                 x=10;
@@ -128,8 +154,16 @@ public class RunGraphics
         {
             // Different "layers" of the game
             Graphics2D gBackground = (Graphics2D) g; // Background color
+
             Graphics2D gScore = (Graphics2D) g; // Score text
-            Graphics2D gSprite = (Graphics2D) g; // Sprites
+
+            Graphics2D gSprite = (Graphics2D) g; // Player sprites
+            Graphics2D gAlien1 = (Graphics2D) g; // Alien 1 sprites
+            Graphics2D gAlien2 = (Graphics2D) g; // Alien 2
+            Graphics2D gAlien3 = (Graphics2D) g; // Alien 3
+            Graphics2D gAlien4 = (Graphics2D) g; // Alien 4
+            Graphics2D gAlien5 = (Graphics2D) g; // Alien 5
+
             Graphics2D gMenu = (Graphics2D) g; // Menu background
             // Graphics2D gFont = (Graphics2D) g; // Game font
 
@@ -143,7 +177,6 @@ public class RunGraphics
             // If game has started, entities can start moving
             if (gameOn == true)
             {
-
                 // Draw sprites
                 zeroShot.draw(gSprite);
                 agentZero.draw(gSprite);
@@ -155,10 +188,38 @@ public class RunGraphics
                 {
                     for (int c = 0; c<a[0].length; c++)
                     {
-                       if(a[r][c].isVis) 
-                       {
-                           a[r][c].draw(gSprite);
-                       }
+                        if(a[r][c].isVis)
+                        {
+                            int num = c%5;
+
+                            switch (num) 
+                            {
+                                case 0:
+                                    a[r][c].draw(gAlien1);
+                                    break;
+
+                                case 1:
+                                    a[r][c].draw(gAlien2);
+                                    break;
+
+                                case 2:
+                                    a[r][c].draw(gAlien3);
+                                    break;
+
+                                case 3:
+                                    a[r][c].draw(gAlien4);
+                                    break;
+
+                                case 4:
+                                    a[r][c].draw(gAlien5);
+                                    break;
+                            
+                                default:
+                                    break;
+                            }
+
+                            a[r][c].draw(gSprite);
+                        }
                   }
                 }
             
@@ -197,24 +258,45 @@ public class RunGraphics
         {
             Toolkit t = Toolkit.getDefaultToolkit();  
             Image oneSpr = t.getImage("one"+ emotionOne + ".png");  
-            g.drawImage(oneSpr, 0, 0,this);
+            g.drawImage(oneSpr, 5, 5,this);
         }
 
         // Menu screen
         public void startScreen(Graphics g, Graphics2D g2) {
             g2.setColor(Color.white);
-            if (controls == false)
+            if (!controls)
             {
-                g.drawString("BUG INVADERS", 250, 200);
-                g.drawString("Press ENTER to start", 240, 350);
-                g.drawString("Press C for controls", 240, 400);
+                if (gameOver)
+                {
+                    g.drawString("GAME OVER", 250, 200);
+                    if (zeroPts < onePts)
+                    {
+                        g.drawString("Player 2 WINS!", 245, 250);
+                    }
+                    else if (zeroPts > onePts)
+                    {
+                        g.drawString("Player 1 WINS!", 245, 250);
+                    }
+                    else
+                    {
+                        g.drawString("IT'S A TIE!", 255, 250);
+                    }
+                    
+                    g.drawString("Press ENTER to play again", 215, 350);
+                }
+                else
+                {
+                    g.drawString("BUG INVADERS", 250, 200);
+                    g.drawString("Press ENTER to start", 235, 350);
+                    g.drawString("Press C for controls", 235, 400);
+                }
             }
-            else
+            else if (controls)
             {
                 g.drawString("Player 1 controls Agent Zero, and moves using the A & D keys. Use W to shoot.",
                 30, 200);
-                g.drawString("Player 2 controls Agent One, and moves using the <- & -> keys. Use Spacebar to shoot.", 
-                20, 250);
+                g.drawString("Player 2 controls Agent One, and moves using the Left & Right arrow keys. Use Up to shoot.", 
+                10, 250);
 
                 g.drawString("Press ENTER to start", 240, 350);
             }
@@ -324,9 +406,10 @@ public class RunGraphics
 
                     a[r][c].setY(a[r][c].getY()+10);
 
-                    if(a[r][c].getY() > 500) // The bottom of the screen
+                    if(a[r][c].getY() > 500 || zeroPts + onePts == 30) // The bottom of the screen
                     {
                         gameOn = false;
+                        gameOver = true;
                     }
 
                 }
@@ -349,33 +432,33 @@ public class RunGraphics
         {  
             int k = e.getKeyCode();
 
-            agentZero.setLeftRight(k,37, 39); // <- and ->
-            agentOne.setLeftRight(k, 65, 68); // A and D
+            agentZero.setLeftRight(k,65, 68); // A and D
+            agentOne.setLeftRight(k, 37, 39); // <- and ->
 
             switch (k) 
             {
-                case 10:
+                case 10: // Return / Enter
                     gameSetup();
                     gameOn = true;
                     break;
 
-                case 32:
+                case 87: // W
                     zeroShot.goUp=true;
                     zeroShot.setX(agentZero.getX() + (agentZero.getWidth()/2));
                     zeroShot.setY(agentZero.getY());
                     break;
 
-                case 86:
+                case 38: // Up
                     oneShot.goUp=true;
                     oneShot.setX(agentOne.getX() + (agentOne.getWidth()/2));
                     oneShot.setY(agentOne.getY());
                     break;
 
-                case 67:
+                case 67: // C
                     controls = true;
                     break;
 
-                case 75:
+                case 75: // K
                     controls = false;
                     break;
 
@@ -426,7 +509,7 @@ public class RunGraphics
         {
             // long beforeTime, timeDiff, sleep;
             // beforeTime = System.currentTimeMillis();
-            int animationDelay = 50;
+            int animationDelay = 25;
             long time = System.currentTimeMillis();
 
             while (true) // Infinite loop
