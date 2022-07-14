@@ -1,9 +1,4 @@
-import java.io.File;
-import java.net.URL;
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
-import javax.imageio.ImageIO;
 
 public class Ship extends SpaceCharacter
 {
@@ -15,7 +10,7 @@ public class Ship extends SpaceCharacter
 
     public Ship(int x, int y, int w, int h, int s, String u)
     {
-        super(x, y, w, h, s, "player.png");
+        super(x, y, w, h, s, u + ".png");
     }
 
     public void draw(Graphics window){

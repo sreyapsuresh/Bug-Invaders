@@ -1,28 +1,14 @@
 import java.awt.*;  
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.TextField;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.util.*;
-import javax.swing.Timer;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
-import javax.sound.sampled.*;
 
 /*
 *  GAME CONTROLS:
@@ -66,6 +52,7 @@ public class RunGraphics
         int xAxis;
         int yAxis;
         Boolean gameOn = false;
+        Boolean controls = false;
 
         String emotionZero = "Neutral"; // Expression of Agent Zero
         String emotionOne = "Neutral"; // Agent One
@@ -112,12 +99,12 @@ public class RunGraphics
             gameOn = false;
             
             // Ships
-            agentOne = new Ship(100,500,57,35,5,"player.png");                                                             // **CHANGE SPRITE**
-            agentZero = new Ship(300,500,57,35,5,"player.png");
+            agentZero = new Ship(100,500,32,32,5,"zeroShip");
+            agentOne = new Ship(300,500,32,32,5,"oneShip");                                                             
             
             // Shots
-            oneShot = new Shot(100,500,5,20,15,"shot.png");
-            zeroShot = new Shot(300,500,5,20,15,"shot.png");                                                               // **CHANGE SPRITE**
+            zeroShot = new Shot(100,500,5,20,15,"shot.png");
+            oneShot = new Shot(300,500,5,20,15,"shot.png");                                                          
 
             // Alien
             a = new Alien[3][10];
@@ -129,11 +116,11 @@ public class RunGraphics
             {
                 for (int c = 0; c<a[0].length; c++)
                 {
-                    a[r][c] = new Alien(x,y,30,20,5,"alien.png");
+                    a[r][c] = new Alien(x,y,25,25,5,"alien.png");
                     x += 35;
                 }
                 x=10;
-                y += 25;
+                y += 30;
             }      
         }
 
@@ -144,7 +131,7 @@ public class RunGraphics
             Graphics2D gScore = (Graphics2D) g; // Score text
             Graphics2D gSprite = (Graphics2D) g; // Sprites
             Graphics2D gMenu = (Graphics2D) g; // Menu background
-            Graphics2D gFont = (Graphics2D) g; // Game font
+            // Graphics2D gFont = (Graphics2D) g; // Game font
 
             // Needed to draw things
             Dimension d = getSize();
@@ -156,6 +143,26 @@ public class RunGraphics
             // If game has started, entities can start moving
             if (gameOn == true)
             {
+
+                // Draw sprites
+                zeroShot.draw(gSprite);
+                agentZero.draw(gSprite);
+
+                oneShot.draw(gSprite);
+                agentOne.draw(gSprite);
+
+                for(int r = 0; r<a.length; r++)
+                {
+                    for (int c = 0; c<a[0].length; c++)
+                    {
+                       if(a[r][c].isVis) 
+                       {
+                           a[r][c].draw(gSprite);
+                       }
+                  }
+                }
+            
+                // Entity movement
                 moveAlien();
 
                 agentZero.move(0);
@@ -165,6 +172,8 @@ public class RunGraphics
                 oneShot.move(0);
 
                 oneSprite(gSprite);
+                // zeroSprite(gSprite);
+
                 updateScore(g, gScore);
             } 
             else
@@ -172,25 +181,7 @@ public class RunGraphics
                 startScreen(g, gMenu);
             }
 
-            // Draw sprites
-            zeroShot.draw(gSprite);
-            agentZero.draw(gSprite);
-
-            oneShot.draw(gSprite);
-            agentOne.draw(gSprite);
-
             hitDetect();
-
-            for(int r = 0; r<a.length; r++)
-            {
-                for (int c = 0; c<a[0].length; c++)
-                {
-                    if(a[r][c].isVis) 
-                    {
-                        a[r][c].draw(gSprite);
-                    }
-                }
-            }  
         }
 
         // Agent Zero Sprite
@@ -212,7 +203,21 @@ public class RunGraphics
         // Menu screen
         public void startScreen(Graphics g, Graphics2D g2) {
             g2.setColor(Color.white);
-            g.drawString("Press S to start", 10, 200);
+            if (controls == false)
+            {
+                g.drawString("BUG INVADERS", 250, 200);
+                g.drawString("Press ENTER to start", 240, 350);
+                g.drawString("Press C for controls", 240, 400);
+            }
+            else
+            {
+                g.drawString("Player 1 controls Agent Zero, and moves using the A & D keys. Use W to shoot."
+                , 30, 200);
+                g.drawString("Player 2 controls Agent One, and moves using the <- & -> keys. Use Spacebar to shoot."
+                , 20, 250);
+
+                g.drawString("Press ENTER to start", 240, 350);
+            }
         }
 
         // Update score
@@ -327,34 +332,26 @@ public class RunGraphics
             }
         }
 
-        public void mousePressed(MouseEvent e) {
-            int x = e.getX();
-            int y = e.getY();
-        }
+        public void mousePressed(MouseEvent e) {}
 
-        public void mouseReleased(MouseEvent e) {
-        }
+        public void mouseReleased(MouseEvent e) {}
 
-        public void mouseEntered(MouseEvent e) {
-        }
+        public void mouseEntered(MouseEvent e) {}
 
-        public void mouseExited(MouseEvent e) {
-        }
+        public void mouseExited(MouseEvent e) {}
 
-        public void mouseClicked(MouseEvent e) {
-        }
+        public void mouseClicked(MouseEvent e) {}
 
-        public void keyTyped ( KeyEvent e ){  
+        public void keyTyped ( KeyEvent e ){}  
 
-        }  
-
-        public void keyPressed ( KeyEvent e){  
+        public void keyPressed ( KeyEvent e)
+        {  
             int k = e.getKeyCode();
 
             agentZero.setLeftRight(k,37, 39); // <- and ->
             agentOne.setLeftRight(k, 65, 68); // A and D
 
-            if(k == 83) // S
+            if(k == 10) // Enter
             {
                 gameSetup();
                 gameOn = true;
@@ -373,10 +370,21 @@ public class RunGraphics
                 oneShot.setX(agentOne.getX() + (agentOne.getWidth()/2));
                 oneShot.setY(agentOne.getY() );
             }
+
+            if(k == 67) // C
+            {
+                controls = true;
+            }
+
+            if(k == 75) // K
+            {
+                controls = false;
+            }
         }  
 
-        public void keyReleased ( KeyEvent e ){  
-            int k = e.getKeyCode();
+        public void keyReleased ( KeyEvent e )
+        {  
+            // int k = e.getKeyCode();
 
             agentZero.stop();
             agentOne.stop();
@@ -384,8 +392,8 @@ public class RunGraphics
 
         public void run() 
         {
-            long beforeTime, timeDiff, sleep;
-            beforeTime = System.currentTimeMillis();
+            // long beforeTime, timeDiff, sleep;
+            // beforeTime = System.currentTimeMillis();
             int animationDelay = 50;
             long time = System.currentTimeMillis();
 
