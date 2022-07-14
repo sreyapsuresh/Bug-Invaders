@@ -211,17 +211,18 @@ public class RunGraphics
             }
             else
             {
-                g.drawString("Player 1 controls Agent Zero, and moves using the A & D keys. Use W to shoot."
-                , 30, 200);
-                g.drawString("Player 2 controls Agent One, and moves using the <- & -> keys. Use Spacebar to shoot."
-                , 20, 250);
+                g.drawString("Player 1 controls Agent Zero, and moves using the A & D keys. Use W to shoot.",
+                30, 200);
+                g.drawString("Player 2 controls Agent One, and moves using the <- & -> keys. Use Spacebar to shoot.", 
+                20, 250);
 
                 g.drawString("Press ENTER to start", 240, 350);
             }
         }
 
         // Update score
-        public void updateScore(Graphics g, Graphics2D g2) {
+        public void updateScore(Graphics g, Graphics2D g2) 
+        {
             g2.setColor(Color.white);
             g.drawString("P1 Score: " + zeroPts, 500, 25);
             g.drawString("P2 Score: " + onePts, 500, 75);
@@ -289,13 +290,13 @@ public class RunGraphics
             {
                 for (int c = 0; c<a[0].length; c++)
                 {
-                    if(a[r][c].getX()>600)
+                    if(a[r][c].getX() > 600)
                     {
                         moveLeftRight(1);
                         break;
                     }
 
-                    if(a[r][c].getX()<0)
+                    if(a[r][c].getX() < 0)
                     {
                         moveLeftRight(2);
                         break;
@@ -312,13 +313,13 @@ public class RunGraphics
                 {
                     if(d==1)
                     {
-                        a[r][c].moveLeft=true;
-                        a[r][c].moveRight=false;
+                        a[r][c].moveLeft = true;
+                        a[r][c].moveRight = false;
                     }
                     else
                     {
-                        a[r][c].moveLeft=false;
-                        a[r][c].moveRight=true;
+                        a[r][c].moveLeft = false;
+                        a[r][c].moveRight = true;
                     }
 
                     a[r][c].setY(a[r][c].getY()+10);
@@ -332,15 +333,15 @@ public class RunGraphics
             }
         }
 
-        public void mousePressed(MouseEvent e) {}
+        public void mousePressed(MouseEvent e){}
 
-        public void mouseReleased(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e){}
 
-        public void mouseEntered(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e){}
 
-        public void mouseExited(MouseEvent e) {}
+        public void mouseExited(MouseEvent e){}
 
-        public void mouseClicked(MouseEvent e) {}
+        public void mouseClicked(MouseEvent e){}
 
         public void keyTyped ( KeyEvent e ){}  
 
@@ -351,35 +352,66 @@ public class RunGraphics
             agentZero.setLeftRight(k,37, 39); // <- and ->
             agentOne.setLeftRight(k, 65, 68); // A and D
 
-            if(k == 10) // Enter
+            switch (k) 
             {
-                gameSetup();
-                gameOn = true;
+                case 10:
+                    gameSetup();
+                    gameOn = true;
+                    break;
+
+                case 32:
+                    zeroShot.goUp=true;
+                    zeroShot.setX(agentZero.getX() + (agentZero.getWidth()/2));
+                    zeroShot.setY(agentZero.getY());
+                    break;
+
+                case 86:
+                    oneShot.goUp=true;
+                    oneShot.setX(agentOne.getX() + (agentOne.getWidth()/2));
+                    oneShot.setY(agentOne.getY());
+                    break;
+
+                case 67:
+                    controls = true;
+                    break;
+
+                case 75:
+                    controls = false;
+                    break;
+
+                default:
+                    break;
             }
 
-            if(k == 32) // Spacebar
-            {
-                zeroShot.goUp=true;
-                zeroShot.setX(agentZero.getX() + (agentZero.getWidth()/2));
-                zeroShot.setY(agentZero.getY() );
-            }
+            // if(k == 10) // Enter
+            // {
+            //     gameSetup();
+            //     gameOn = true;
+            // }
+
+            // if(k == 32) // Spacebar
+            // {
+            //     zeroShot.goUp=true;
+            //     zeroShot.setX(agentZero.getX() + (agentZero.getWidth()/2));
+            //     zeroShot.setY(agentZero.getY() );
+            // }
             
-            if(k == 86) // V
-            {
-                oneShot.goUp=true;
-                oneShot.setX(agentOne.getX() + (agentOne.getWidth()/2));
-                oneShot.setY(agentOne.getY() );
-            }
+            // if(k == 86) // V
+            // {
+            //     oneShot.goUp=true;
+            //     oneShot.setX(agentOne.getX() + (agentOne.getWidth()/2));
+            //     oneShot.setY(agentOne.getY() );
+            // }
 
-            if(k == 67) // C
-            {
-                controls = true;
-            }
+            // if(k == 67) // C
+            // {
+            //     controls = true;
+            // }
 
-            if(k == 75) // K
-            {
-                controls = false;
-            }
+            // if(k == 75) // K
+            // {
+            //     controls = false;
+            // }
         }  
 
         public void keyReleased ( KeyEvent e )
