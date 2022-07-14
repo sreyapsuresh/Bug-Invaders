@@ -31,7 +31,7 @@ public class RunGraphics
         frame.setSize(fW, fH);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setPreferredSize(frame.getSize());
-        frame.add(new showGraphics(frame.getSize())); // Setting up the DrawBars public class function (getting bars and putting it in this frame)
+        frame.add(new showGraphics(frame.getSize()));
         frame.pack();
         frame.setVisible(true); 
     }
@@ -39,10 +39,9 @@ public class RunGraphics
     // Main method
     public static void main(String[] args) 
     {
-        new RunGraphics();
-
         // Music player
         MusicPlayer.RunMusic("bugDestroyers.wav");
+        new RunGraphics();
     }
     public static class showGraphics extends JPanel implements Runnable, MouseListener, KeyListener 
     {
@@ -118,34 +117,36 @@ public class RunGraphics
                 for (int c = 0; c<a[0].length; c++)
                 {
                     int num = c%5;
+                    switch (num) 
+                    {
+                        case 0:
+                            a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienOne");
+                            break;
 
-                        switch (num) {
-                            case 0:
-                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienOne");
-                                break;
+                        case 1:
+                            a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienTwo");
+                            break;
 
-                            case 1:
-                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienTwo");
-                                break;
+                        case 2:
+                            a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienThree"); 
+                            break;
 
-                            case 2:
-                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienThree"); 
-                                break;
+                        case 3:
+                            a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienFour");
+                            break;
 
-                            case 3:
-                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienFour");
-                                break;
-
-                            case 4:
-                                a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienFive");
-                                break;
+                        case 4:
+                            a[r][c] = new Alien(x,y,25,25,5, "Aliens/alienFive");
+                            break;
                         
-                            default:
-                                break;
-                        }
+                        default:
+                            break;
+                    }
+
                     x += 35;
                 }
-                x=10;
+
+                x = 10;
                 y += 30;
             }      
         }
@@ -154,18 +155,9 @@ public class RunGraphics
         {
             // Different "layers" of the game
             Graphics2D gBackground = (Graphics2D) g; // Background color
-
             Graphics2D gScore = (Graphics2D) g; // Score text
-
-            Graphics2D gSprite = (Graphics2D) g; // Player sprites
-            Graphics2D gAlien1 = (Graphics2D) g; // Alien 1 sprites
-            Graphics2D gAlien2 = (Graphics2D) g; // Alien 2
-            Graphics2D gAlien3 = (Graphics2D) g; // Alien 3
-            Graphics2D gAlien4 = (Graphics2D) g; // Alien 4
-            Graphics2D gAlien5 = (Graphics2D) g; // Alien 5
-
+            Graphics2D gSprite = (Graphics2D) g; // Sprites
             Graphics2D gMenu = (Graphics2D) g; // Menu background
-            // Graphics2D gFont = (Graphics2D) g; // Game font
 
             // Needed to draw things
             Dimension d = getSize();
@@ -190,37 +182,9 @@ public class RunGraphics
                     {
                         if(a[r][c].isVis)
                         {
-                            int num = c%5;
-
-                            switch (num) 
-                            {
-                                case 0:
-                                    a[r][c].draw(gAlien1);
-                                    break;
-
-                                case 1:
-                                    a[r][c].draw(gAlien2);
-                                    break;
-
-                                case 2:
-                                    a[r][c].draw(gAlien3);
-                                    break;
-
-                                case 3:
-                                    a[r][c].draw(gAlien4);
-                                    break;
-
-                                case 4:
-                                    a[r][c].draw(gAlien5);
-                                    break;
-                            
-                                default:
-                                    break;
-                            }
-
                             a[r][c].draw(gSprite);
                         }
-                  }
+                    }
                 }
             
                 // Entity movement
@@ -406,12 +370,12 @@ public class RunGraphics
 
                     a[r][c].setY(a[r][c].getY()+10);
 
-                    if(a[r][c].getY() > 500 || zeroPts + onePts == 30) // The bottom of the screen
+                    if(a[r][c].getY() > 450 || zeroPts + onePts == 30) // The bottom of the screen
                     {
                         gameOn = false;
+                        controls = false;
                         gameOver = true;
                     }
-
                 }
             }
         }
@@ -437,7 +401,7 @@ public class RunGraphics
 
             switch (k) 
             {
-                case 10: // Return / Enter
+                case 10: // Return or Enter
                     gameSetup();
                     gameOn = true;
                     break;
@@ -465,50 +429,16 @@ public class RunGraphics
                 default:
                     break;
             }
-
-            // if(k == 10) // Enter
-            // {
-            //     gameSetup();
-            //     gameOn = true;
-            // }
-
-            // if(k == 32) // Spacebar
-            // {
-            //     zeroShot.goUp=true;
-            //     zeroShot.setX(agentZero.getX() + (agentZero.getWidth()/2));
-            //     zeroShot.setY(agentZero.getY() );
-            // }
-            
-            // if(k == 86) // V
-            // {
-            //     oneShot.goUp=true;
-            //     oneShot.setX(agentOne.getX() + (agentOne.getWidth()/2));
-            //     oneShot.setY(agentOne.getY() );
-            // }
-
-            // if(k == 67) // C
-            // {
-            //     controls = true;
-            // }
-
-            // if(k == 75) // K
-            // {
-            //     controls = false;
-            // }
         }  
 
         public void keyReleased ( KeyEvent e )
         {  
-            // int k = e.getKeyCode();
-
             agentZero.stop();
             agentOne.stop();
         } 
 
         public void run() 
         {
-            // long beforeTime, timeDiff, sleep;
-            // beforeTime = System.currentTimeMillis();
             int animationDelay = 25;
             long time = System.currentTimeMillis();
 
@@ -523,8 +453,8 @@ public class RunGraphics
                 catch (InterruptedException e) 
                 {
                     System.out.println(e);
-                }   // End catch
-            }   // End while loop
-        }   // End of run
+                }   
+            }   
+        }
     }
 }
