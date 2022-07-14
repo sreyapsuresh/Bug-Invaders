@@ -154,9 +154,18 @@ public class RunGraphics
         {
             // Different "layers" of the game
             Graphics2D gBackground = (Graphics2D) g; // Background color
+
             Graphics2D gScore = (Graphics2D) g; // Score text
-            Graphics2D gSprite = (Graphics2D) g; // Sprites
+
+            Graphics2D gSprite = (Graphics2D) g; // Player sprites
+            Graphics2D gAlien1 = (Graphics2D) g; // Alien 1 sprites
+            Graphics2D gAlien2 = (Graphics2D) g; // Alien 2
+            Graphics2D gAlien3 = (Graphics2D) g; // Alien 3
+            Graphics2D gAlien4 = (Graphics2D) g; // Alien 4
+            Graphics2D gAlien5 = (Graphics2D) g; // Alien 5
+
             Graphics2D gMenu = (Graphics2D) g; // Menu background
+            // Graphics2D gFont = (Graphics2D) g; // Game font
 
             // Needed to draw things
             Dimension d = getSize();
@@ -181,6 +190,34 @@ public class RunGraphics
                     {
                         if(a[r][c].isVis)
                         {
+                            int num = c%5;
+
+                            switch (num) 
+                            {
+                                case 0:
+                                    a[r][c].draw(gAlien1);
+                                    break;
+
+                                case 1:
+                                    a[r][c].draw(gAlien2);
+                                    break;
+
+                                case 2:
+                                    a[r][c].draw(gAlien3);
+                                    break;
+
+                                case 3:
+                                    a[r][c].draw(gAlien4);
+                                    break;
+
+                                case 4:
+                                    a[r][c].draw(gAlien5);
+                                    break;
+                            
+                                default:
+                                    break;
+                            }
+
                             a[r][c].draw(gSprite);
                         }
                   }
